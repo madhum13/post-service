@@ -7,8 +7,10 @@ import com.myfb.postservice.repository.PostRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,11 +79,13 @@ public class PostServiceImpl implements PostService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-       // HttpEntity<CommentDTO[]> httpEntity =new HttpEntity<>(headers);
-       CommentDTO[] comments =  restTemplate.getForObject(this.postBaseUrl+"/posts/{postId}/comments",
-                CommentDTO[].class, postId);
-       System.out.println(comments.length);
+        HttpEntity<CommentDTO[]> httpEntity =new HttpEntity<>(headers);
+      // CommentDTO[] comments =  restTemplate.getForObject(this.postBaseUrl+"/posts/{postId}/comments",
+               // CommentDTO[].class, postId);
+        ResponseEntity<CommentDTO[]> comments = restTemplate.getForEntity(this.postBaseUrl+"/posts/{postId}/comments", CommentDTO[].class, postId);
+       System.out.println(comments.getBody().length);
+        System.out.println(comments);
 
-       return comments;
+       return comments.getBody();
     }
 }
